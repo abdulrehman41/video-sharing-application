@@ -261,6 +261,7 @@ export default function VideoCard({ video, setVideos, videos }) {
                       {item.raw?.sentiment && (
                         <SentimentBadge s={item.raw.sentiment} scores={item.raw.sentimentScores} />
                       )}
+                      {/* Testing */}
                     </div>
                     <div className="text-gray-800 whitespace-pre-wrap">{item.text}</div>
                   </li>
