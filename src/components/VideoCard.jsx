@@ -26,6 +26,18 @@ export default function VideoCard({ video, setVideos, videos }) {
   const liked = !!video.raw?.likedByCurrentUser;
   const currentUserId = user?.id || '0aaa4305-4b53-4ee3-a429-e19ce7180467';
 
+  function SentimentBadge({ s, scores }) {
+    const map = {
+      positive: { label: 'Positive 😊', cls: 'bg-green-100 text-green-800' },
+      neutral: { label: 'Neutral 😐', cls: 'bg-gray-100 text-gray-800' },
+      negative: { label: 'Negative 😞', cls: 'bg-red-100 text-red-800' },
+      mixed: { label: 'Mixed 🤔', cls: 'bg-yellow-100 text-yellow-800' },
+    };
+    const m = map[s] || map.neutral;
+    const conf = scores ? ` (${Math.max(scores.positive, scores.neutral, scores.negative).toFixed(2)})` : '';
+    return <span className={`ml-2 inline-block px-2 py-0.5 text-xs rounded ${m.cls}`}>{m.label}{conf}</span>;
+  }
+
   const like = async () => {
     if (liked || submittingLike) return;
 
@@ -244,8 +256,11 @@ export default function VideoCard({ video, setVideos, videos }) {
                 {list.map(item => (
                   <li key={item.id} className="border-b pb-3">
                     <div className="text-sm">
-                      <span className="font-medium">{item.authorName}</span>
+                      <span className="font-medium">{item.authorName || 'User'}</span>
                       <span className="text-gray-400"> · {formatWhen(item.createdAt)}</span>
+                      {item.raw?.sentiment && (
+                        <SentimentBadge s={item.raw.sentiment} scores={item.raw.sentimentScores} />
+                      )}
                     </div>
                     <div className="text-gray-800 whitespace-pre-wrap">{item.text}</div>
                   </li>
